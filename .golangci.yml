@@ -9,9 +9,10 @@ linters:
   enable:
     - errcheck
     - goimports
-    - golint
+    - revive
     - govet
     - staticcheck
+    - wsl
 
 issues:
   exclude-use-default: false

@@ -1,5 +1,7 @@
 package model
 
+import "fmt"
+
 // package to represents the board
 // and actions that can be done
 
@@ -31,4 +33,16 @@ func NewBord() *Board {
 		bord.Field[i] = EMPTY
 	}
 	return bord
+}
+
+// Move puts a marker O or X on the provided place
+func (b *Board) Move(piece FieldContents, place int) error {
+	if piece == EMPTY {
+		return fmt.Errorf("only X or O allowed for a move")
+	}
+	if place < 1 || place > 9 {
+		return fmt.Errorf("we only support places 1..9")
+	}
+	b.Field[place] = piece
+	return nil
 }
