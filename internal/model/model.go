@@ -17,9 +17,15 @@ const (
 
 // Board basically consists of 9 places,
 // to keep it human readable we start counting at 1 instead of 0
-// 1 2 3
-// 4 5 6
-// 7 8 9
+//     |     |
+//  1  |  2  |  3
+//_____|_____|_____
+//     |     |
+//  4  |  5  |  6
+//_____|_____|_____
+//     |     |
+//  7  |  8  |  9
+//     |     |
 type Board struct {
 	Field map[int]FieldContents
 }
