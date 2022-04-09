@@ -50,3 +50,29 @@ func (b *Board) Move(piece FieldContents, place int) error {
 
 	return nil
 }
+
+// PrintBoard to output the contents of the board to screen
+func (b *Board) PrintBoard() {
+	fmt.Println("     |     |     ")
+	fmt.Printf("  %s  |  %s  |  %s \n", b.printPiece(1), b.printPiece(2), b.printPiece(3))
+	fmt.Println("_____|_____|_____")
+	fmt.Println("     |     |     ")
+	fmt.Printf("  %s  |  %s  |  %s \n", b.printPiece(4), b.printPiece(5), b.printPiece(6))
+	fmt.Println("_____|_____|_____")
+	fmt.Println("     |     |     ")
+	fmt.Printf("  %s  |  %s  |  %s \n", b.printPiece(7), b.printPiece(8), b.printPiece(9))
+	fmt.Println("     |     |     ")
+}
+
+func (b *Board) printPiece(piece int) string {
+	switch b.Field[piece] {
+	case EMPTY:
+		return "."
+	case X:
+		return "X"
+	case O:
+		return "O"
+	}
+
+	return "."
+}

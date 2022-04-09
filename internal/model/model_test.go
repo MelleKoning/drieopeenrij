@@ -25,4 +25,6 @@ func TestAFewMovesOnTheBoard(t *testing.T) {
 	_ = b.Move(model.X, 5)
 	_ = b.Move(model.O, 1)
 	_ = b.Move(model.X, 9)
+
+	b.PrintBoard()
 }
