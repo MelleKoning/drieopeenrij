@@ -32,6 +32,7 @@ func NewBord() *Board {
 	for i := 1; i <= 9; i++ {
 		bord.Field[i] = EMPTY
 	}
+
 	return bord
 }
 
@@ -40,9 +41,12 @@ func (b *Board) Move(piece FieldContents, place int) error {
 	if piece == EMPTY {
 		return fmt.Errorf("only X or O allowed for a move")
 	}
+
 	if place < 1 || place > 9 {
 		return fmt.Errorf("we only support places 1..9")
 	}
+
 	b.Field[place] = piece
+
 	return nil
 }

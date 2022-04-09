@@ -20,4 +20,3 @@ The development is supported by a linter which you can execute with:
 When running the above on the command line it will check the code for certain rules and either auto-fix or suggest where to fix issues.
 
 On my development system I've also installed `pre-commit` which will automatically run the linter before a git commit. Thereby preventing commits when the linter fails. This just ensures a some minimal code quality is maintained on the project.
-

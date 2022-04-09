@@ -7,7 +7,6 @@ import (
 )
 
 func TestBoardCreation_Empty(t *testing.T) {
-
 	// Arrange
 	b := model.NewBord()
 
@@ -23,7 +22,7 @@ func TestAFewMovesOnTheBoard(t *testing.T) {
 	// Arrange
 	b := model.NewBord()
 
-	b.Move(model.X, 5)
-	b.Move(model.X, 1)
-	b.Move(model.X, 1)
+	_ = b.Move(model.X, 5)
+	_ = b.Move(model.O, 1)
+	_ = b.Move(model.X, 9)
 }
