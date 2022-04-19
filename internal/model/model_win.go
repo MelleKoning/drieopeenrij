@@ -15,7 +15,7 @@ func (b *Board) Winner() FieldContents {
 		// only check for X, O
 		if b.Field[w.p1] == X || b.Field[w.p1] == O {
 			if b.Field[w.p1] == b.Field[w.p2] && b.Field[w.p2] == b.Field[w.p3] {
-				return b.Field[1]
+				return b.Field[w.p1]
 			}
 		}
 	}
