@@ -1,9 +1,11 @@
 package model_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/MelleKoning/drieopeenrij/internal/model"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBoardCreation_Empty(t *testing.T) {
@@ -27,4 +29,15 @@ func TestAFewMovesOnTheBoard(t *testing.T) {
 	_ = b.Move(model.X, 9)
 
 	b.PrintBoard()
+}
+
+func TestWhenMoveOnOccupiedErrors(t *testing.T) {
+	// Arrange
+	b := model.NewBord()
+	expectedError := errors.New("occupied space")
+	err := b.Move(model.X, 5)
+	assert.Nil(t, err)
+
+	err = b.Move(model.X, 5)
+	assert.Equal(t, expectedError, err)
 }

@@ -52,6 +52,10 @@ func (b *Board) Move(piece FieldContents, place int) error {
 		return fmt.Errorf("we only support places 1..9")
 	}
 
+	if b.Field[place] != EMPTY {
+		return fmt.Errorf("occupied space")
+	}
+
 	b.Field[place] = piece
 
 	return nil
@@ -59,6 +63,7 @@ func (b *Board) Move(piece FieldContents, place int) error {
 
 // PrintBoard to output the contents of the board to screen
 func (b *Board) PrintBoard() {
+	fmt.Println("-")
 	fmt.Println("     |     |     ")
 	fmt.Printf("  %s  |  %s  |  %s \n", b.printPiece(1), b.printPiece(2), b.printPiece(3))
 	fmt.Println("_____|_____|_____")
