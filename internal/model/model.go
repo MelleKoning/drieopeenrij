@@ -15,6 +15,12 @@ const (
 	O
 )
 
+// BestMove stores the best move found for minimax
+type BestMove struct {
+	Spot   int           // represents the spot
+	Winner FieldContents // represents winner for this move
+}
+
 // Board basically consists of 9 places,
 // to keep it human readable we start counting at 1 instead of 0
 //     |     |
@@ -42,6 +48,17 @@ func NewBord() *Board {
 	return bord
 }
 
+// Full checks if the board is fully occupied
+func (b *Board) Full() bool {
+	for p := 1; p <= 9; p++ {
+		if b.Field[p] == EMPTY {
+			return false
+		}
+	}
+
+	return true
+}
+
 // Move puts a marker O or X on the provided place
 func (b *Board) Move(piece FieldContents, place int) error {
 	if piece == EMPTY {
@@ -59,6 +76,11 @@ func (b *Board) Move(piece FieldContents, place int) error {
 	b.Field[place] = piece
 
 	return nil
+}
+
+//UndoMove makes the place empty
+func (b *Board) UndoMove(place int) {
+	b.Field[place] = EMPTY
 }
 
 // PrintBoard to output the contents of the board to screen
