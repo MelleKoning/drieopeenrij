@@ -131,6 +131,14 @@ func (g *Game) MiniMax(depth int) model.BestMove {
 		}
 	}
 
+	return g.searchBestMiniMax(depth)
+}
+
+// searchBestMiniMax tries out all possible moves
+// of the current position and will return the
+// earliest win (if it exists), or draw, or else
+// just a valid move
+func (g *Game) searchBestMiniMax(depth int) model.BestMove {
 	myTurn := g.Turn
 	// initialize loss and search for win
 	loss := model.X
@@ -140,7 +148,6 @@ func (g *Game) MiniMax(depth int) model.BestMove {
 	}
 
 	best := model.BestMove{Spot: 0, Winner: loss, Depth: depth + 1}
-	// search for a winning move
 	for p := 1; p <= 9; p++ {
 		// is this move possible?
 		if g.board.Field[p] == model.EMPTY {
@@ -152,16 +159,16 @@ func (g *Game) MiniMax(depth int) model.BestMove {
 			}
 
 			g.Move(p)
-			try := g.MiniMax(depth)
+			try := g.MiniMax(depth) // go deeper
 
 			if try.Winner == myTurn {
 				best.Spot = p
 				best.Winner = myTurn
 				best.Depth = try.Depth
-
 				g.UndoMove(p)
 
-				break // no need to search other moves
+				return best
+
 			} else if try.Winner == model.EMPTY &&
 				try.Depth < best.Depth {
 				best.Spot = p
@@ -172,6 +179,5 @@ func (g *Game) MiniMax(depth int) model.BestMove {
 			g.UndoMove(p)
 		}
 	}
-	// if winner found, return that, other
 	return best
 }
