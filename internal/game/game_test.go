@@ -26,9 +26,14 @@ func TestGetBestMove(t *testing.T) {
 	trialGame.Move(4)
 	trialGame.PrintBoard()
 	// now X can win..
-	getBestMove := trialGame.MiniMax()
-	fmt.Printf("%v", getBestMove)
-	trialGame.PrintBoard()
-	trialGame.Move(getBestMove.Spot)
-	trialGame.PrintBoard()
+	for {
+		getBestMove := trialGame.MiniMax(1)
+		fmt.Printf("%v, %v", getBestMove, trialGame.Turn)
+		trialGame.Move(getBestMove.Spot)
+		trialGame.PrintBoard()
+
+		if trialGame.EndOfGame() {
+			break
+		}
+	}
 }

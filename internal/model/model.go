@@ -19,6 +19,7 @@ const (
 type BestMove struct {
 	Spot   int           // represents the spot
 	Winner FieldContents // represents winner for this move
+	Depth  int           // represents at what depth this move is found
 }
 
 // Board basically consists of 9 places,

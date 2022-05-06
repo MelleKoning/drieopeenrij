@@ -85,38 +85,64 @@ func (g *Game) UndoMove(place int) {
 	}
 }
 
+// EndOfGame checks for game end and returns
+// true if there was a winner or the game ended in a draw
+func (g *Game) EndOfGame() bool {
+	return g.board.Full() || g.board.Winner() != model.EMPTY
+}
+
 // MiniMax searches the best move for the
 // player who's turn it currently is.
 // When a winning move is found, BestMove will contain
 // the spot where to place, if the game ends in a draw
 // the spot will be 0
-func (g *Game) MiniMax() model.BestMove {
-	if g.board.Full() || g.board.Winner() != model.EMPTY {
-		// return the winner, but we do not know
-		// what move caused this here
-		return model.BestMove{Winner: g.board.Winner()}
+func (g *Game) MiniMax(depth int) model.BestMove {
+	if g.EndOfGame() {
+		// in case no winner, model.EMPTY is returned
+		// meaning game will end in a draw
+		return model.BestMove{
+			Spot:   0,
+			Winner: g.board.Winner(),
+			Depth:  depth + 1,
+		}
 	}
 
-	currentTurn := g.Turn
+	myTurn := g.Turn
 	// initialize loss and search for win
 	loss := model.X
 
-	if currentTurn == model.X {
+	if myTurn == model.X {
 		loss = model.O
 	}
 
-	best := model.BestMove{Spot: 0, Winner: loss}
+	best := model.BestMove{Spot: 0, Winner: loss, Depth: depth + 1}
 	// search for a winning move
 	for p := 1; p <= 9; p++ {
-		// move possible?
+		// is this move possible?
 		if g.board.Field[p] == model.EMPTY {
-			g.Move(p)
-			try := g.MiniMax()
-			try.Spot = p
-
-			if try.Winner == currentTurn {
+			// even in case of loss, we have to do a move
+			// so if we have not found a best move yet
+			// lets initialize best as this move
+			if best.Spot == 0 {
 				best.Spot = p
-				best.Winner = currentTurn
+			}
+
+			g.Move(p)
+			try := g.MiniMax(depth)
+
+			if try.Winner == myTurn {
+				best.Spot = p
+				best.Winner = myTurn
+				best.Depth = try.Depth
+
+				g.UndoMove(p)
+
+				break // no need to search other moves
+			} else if try.Winner == model.EMPTY &&
+				try.Depth < best.Depth {
+				best.Spot = p
+				best.Winner = model.EMPTY
+				best.Depth = try.Depth
 			}
 
 			g.UndoMove(p)
