@@ -18,6 +18,7 @@ type Game struct {
 func NewGame() *Game {
 	return &Game{
 		board: model.NewBord(),
+		Turn:  model.X, // by default X starts
 	}
 }
 
@@ -34,7 +35,7 @@ func (g *Game) PlayRandomGame() model.FieldContents {
 	turn := model.X
 
 	moves := 0
-	for g.board.Winner() == model.EMPTY &&
+	for g.Winner() == model.EMPTY &&
 		moves < 9 { // play random moves till there is a winner
 		mv := r1.Intn(9) + 1
 
@@ -56,7 +57,7 @@ func (g *Game) PlayRandomGame() model.FieldContents {
 		}
 	}
 
-	return g.board.Winner()
+	return g.Winner()
 }
 
 // Move places a piece of the player who turns it is
@@ -88,7 +89,30 @@ func (g *Game) UndoMove(place int) {
 // EndOfGame checks for game end and returns
 // true if there was a winner or the game ended in a draw
 func (g *Game) EndOfGame() bool {
-	return g.board.Full() || g.board.Winner() != model.EMPTY
+	return g.board.Full() || g.Winner() != model.EMPTY
+}
+
+// Winner returns X, O or EMPTY in case no winner
+func (g *Game) Winner() model.FieldContents {
+	wins := []struct {
+		p1, p2, p3 int
+	}{
+		{1, 2, 3}, {1, 4, 7}, {1, 5, 9},
+		{2, 5, 8}, {3, 6, 9}, {3, 5, 7},
+		{4, 5, 6},
+		{7, 8, 9},
+	}
+
+	for _, w := range wins {
+		// only check for X, O
+		if g.board.Field[w.p1] == model.X || g.board.Field[w.p1] == model.O {
+			if g.board.Field[w.p1] == g.board.Field[w.p2] && g.board.Field[w.p2] == g.board.Field[w.p3] {
+				return g.board.Field[w.p1]
+			}
+		}
+	}
+
+	return model.EMPTY
 }
 
 // MiniMax searches the best move for the
@@ -102,7 +126,7 @@ func (g *Game) MiniMax(depth int) model.BestMove {
 		// meaning game will end in a draw
 		return model.BestMove{
 			Spot:   0,
-			Winner: g.board.Winner(),
+			Winner: g.Winner(),
 			Depth:  depth + 1,
 		}
 	}

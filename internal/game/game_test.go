@@ -6,7 +6,63 @@ import (
 
 	"github.com/MelleKoning/drieopeenrij/internal/game"
 	"github.com/MelleKoning/drieopeenrij/internal/model"
+	"github.com/stretchr/testify/assert"
 )
+
+func TestWinners(t *testing.T) {
+	type test struct {
+		name        string
+		startTurn   model.FieldContents
+		movelist    []int
+		expectedWin model.FieldContents
+	}
+
+	tests := []test{
+		{
+			name:        "simple-win-x",
+			startTurn:   model.X,
+			movelist:    []int{1, 4, 2, 5, 3},
+			expectedWin: model.X,
+		},
+		{
+			name:        "simple-win-O",
+			startTurn:   model.O,
+			movelist:    []int{1, 2, 5, 8, 9},
+			expectedWin: model.O,
+		},
+		{
+			name:        "no-win",
+			startTurn:   model.X,
+			movelist:    []int{1, 5, 9, 2, 8, 7, 3, 6, 4}, // draw
+			expectedWin: model.EMPTY,
+		},
+		{
+			name:        "win-bottom-row",
+			startTurn:   model.X,
+			movelist:    []int{7, 1, 8, 5, 9},
+			expectedWin: model.X,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// arrange
+			g := game.NewGame()
+			g.Turn = tt.startTurn
+			// act
+			for _, m := range tt.movelist {
+				g.Move(m)
+			}
+			// assert
+			// assign to private var
+			g.PrintBoard()
+			if tt.expectedWin != g.Winner() {
+				t.Errorf("unexpected winner %v", g.Winner())
+
+			}
+		})
+	}
+}
 
 func TestPlayRandomGame(t *testing.T) {
 	trialGame := game.NewGame()
@@ -36,4 +92,6 @@ func TestGetBestMove(t *testing.T) {
 			break
 		}
 	}
+
+	assert.Equal(t, model.X, trialGame.Winner())
 }
