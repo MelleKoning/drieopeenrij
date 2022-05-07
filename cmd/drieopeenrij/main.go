@@ -3,13 +3,28 @@ package main
 import (
 	"fmt"
 
-	"github.com/MelleKoning/drieopeenrij/internal/model"
+	"github.com/MelleKoning/drieopeenrij/internal/game"
 )
 
 func main() {
-	fmt.Println("drie op een rij")
+	fmt.Println("Boter, Kaas en Eieren")
 
-	b := model.NewBord()
+	g := game.NewGame()
+	moveReader := game.NewConsolePlayer()
 
-	b.PrintBoard()
+	g.PrintBoard()
+
+	for !g.EndOfGame() {
+		bestmove := g.MiniMax(100)
+		g.Move(bestmove.Spot)
+		g.PrintBoard()
+
+		if g.EndOfGame() {
+			break
+		}
+
+		moveRead := moveReader.GetPlayerMove(nil)
+		g.Move(moveRead.Spot)
+		g.PrintBoard()
+	}
 }

@@ -119,7 +119,8 @@ func (g *Game) Winner() model.FieldContents {
 // player who's turn it currently is.
 // When a winning move is found, BestMove will contain
 // the spot where to place, if the game ends in a draw
-// the spot will be 0
+// the spot will be the move the goes for the draw,
+// in case of loss it is just a random move
 func (g *Game) MiniMax(depth int) model.BestMove {
 	if g.EndOfGame() {
 		// in case no winner, model.EMPTY is returned
@@ -148,6 +149,7 @@ func (g *Game) searchBestMiniMax(depth int) model.BestMove {
 	}
 
 	best := model.BestMove{Spot: 0, Winner: loss, Depth: depth + 1}
+
 	for p := 1; p <= 9; p++ {
 		// is this move possible?
 		if g.board.Field[p] == model.EMPTY {
@@ -165,12 +167,11 @@ func (g *Game) searchBestMiniMax(depth int) model.BestMove {
 				best.Spot = p
 				best.Winner = myTurn
 				best.Depth = try.Depth
+
 				g.UndoMove(p)
 
 				return best
-
-			} else if try.Winner == model.EMPTY &&
-				try.Depth < best.Depth {
+			} else if try.Winner == model.EMPTY {
 				best.Spot = p
 				best.Winner = model.EMPTY
 				best.Depth = try.Depth
@@ -179,5 +180,6 @@ func (g *Game) searchBestMiniMax(depth int) model.BestMove {
 			g.UndoMove(p)
 		}
 	}
+
 	return best
 }

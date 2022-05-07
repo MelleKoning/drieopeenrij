@@ -37,6 +37,12 @@ type Board struct {
 	Field map[int]FieldContents
 }
 
+// PlayerMove holds a possible move of the user
+type PlayerMove struct {
+	Spot  int           // 1..9
+	Field FieldContents // should match the player who's turn it is
+}
+
 //NewBord returns a new empty board
 func NewBord() *Board {
 	bord := &Board{
@@ -101,7 +107,8 @@ func (b *Board) PrintBoard() {
 func (b *Board) printPiece(piece int) string {
 	switch b.Field[piece] {
 	case EMPTY:
-		return "."
+		return fmt.Sprintf("%d", piece)
+		//return "."
 	case X:
 		return "X"
 	case O:
