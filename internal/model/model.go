@@ -107,8 +107,8 @@ func (b *Board) PrintBoard() {
 func (b *Board) printPiece(piece int) string {
 	switch b.Field[piece] {
 	case EMPTY:
-		return fmt.Sprintf("%d", piece)
-		//return "."
+		//return fmt.Sprintf("%d", piece)
+		return "."
 	case X:
 		return "X"
 	case O:

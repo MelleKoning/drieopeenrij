@@ -1,17 +1,18 @@
-package game
+package humanplayer
 
 import (
 	"bufio"
 	"fmt"
 	"os"
 
+	"github.com/MelleKoning/drieopeenrij/internal/game"
 	"github.com/MelleKoning/drieopeenrij/internal/model"
 )
 
 // MoveHumanReader is an interface for implementing
 // a way for the user to play a move
 type MoveHumanReader interface {
-	GetPlayerMove(gamestate *Game) model.PlayerMove
+	GetPlayerMove(gamestate *game.Game) model.PlayerMove
 }
 
 // ConsolePlayer is a struct for implementing a
@@ -23,19 +24,23 @@ func NewConsolePlayer() MoveHumanReader {
 	return &ConsolePlayer{}
 }
 
-// GetPlayerMove reads a move from the console
-func (c *ConsolePlayer) GetPlayerMove(gamestate *Game) model.PlayerMove {
-	fmt.Print("Your move (1-9):")
+// GetPlayerMove reads from console a move or returns 0 if player wants to quit
+func (c *ConsolePlayer) GetPlayerMove(gamestate *game.Game) model.PlayerMove {
+	fmt.Print("Your move (1-9) 0 to quit:")
 
 	scanner := bufio.NewScanner(os.Stdin)
+	spot := -1
 
-	var char string
-	for scanner.Scan() {
-		char = scanner.Text()
-		break
+	for spot < 0 || spot > 9 {
+		var char string
+
+		for scanner.Scan() {
+			char = scanner.Text()
+			break
+		}
+
+		spot = int(char[0] - '0')
 	}
-
-	spot := int(char[0] - '0')
 
 	return model.PlayerMove{Spot: spot, Field: model.EMPTY}
 }
